@@ -1,31 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList,TouchableOpacity,Dimensions} from 'react-native';
 
-
-
-
-
-
-
-const zoomImages = ()=>{
-  
-};
-
-export const Photos = ({images}) =>{
+export const Photos = ({images,visibleModal}) =>{
+  const arr = [...images];
   
     return(
-        <View >
-            <FlatList key={images.id}
-          data={images}
-          renderItem={({item}) => {
+        <View key={arr.id}>
+            <FlatList key={arr.id}
+          data={arr}
+          renderItem={(i) => {
+            
               return(
-                <View style={{margin:10}}>
-                <TouchableOpacity style={styles.button} onPress={zoomImages}>
-                  <Image style={styles.photo} source={{uri:item.url}} />
-                </TouchableOpacity>
-                  <Text>Name: random</Text>
-                  <Text>Autor: {item.id}</Text>
-                </View>
+                
+                  <View style={{margin:5}}>
+                    <TouchableOpacity style={styles.button} onPress={visibleModal}>
+                      <Image style={styles.photo} source={{uri:i.item.url}} />
+                    </TouchableOpacity>
+                    <Text>Name: random</Text>
+                    <Text>Autor: {i.item.id}</Text>
+                  </View>
               )
             }}
             numColumns={2}
@@ -35,21 +28,25 @@ export const Photos = ({images}) =>{
         </View>
             
     )
-}
-
-const styles = StyleSheet.create({
+  } 
+  const styles = StyleSheet.create({
     photo:{
-        width: 150 ,
-        height: 150,
+        width: (Dimensions.get('window').width/2)-4 ,
+        height: (Dimensions.get('window').height/3)-12,
         flexDirection:'row',
         justifyContent:'space-around',
     },
     button: {
-      // backgroundColor: '#859a9b',
       shadowColor: '#303838',
       shadowOffset: { width: 0, height: 5 },
       shadowRadius: 10,
       shadowOpacity: 0.35
     }
     
-})
+  })
+  
+
+
+
+
+

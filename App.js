@@ -1,23 +1,33 @@
-import React, {Component,useState} from 'react';
-import { StyleSheet, Text, View, Image,FlatList,Thumbnail} from 'react-native';
+import React, {Component} from 'react';
+import { StyleSheet, Text, View, Modal,Image} from 'react-native';
 import {Header} from './components/Header';
 import {Photos} from './components/Photos';
-import {Zoom_photo} from './components/Zoom_photo';
 
 
 
-const client_id = 'cf49c08b444ff4cb9e4d126b7e9f7513ba1ee58de7906e4360afc1a33d1bf4c0',
-      per_page = 15,
-      page = 2
+
+
+
+
+const client_id = 'ab3411e4ac868c2646c0ed488dfd919ef612b04c264f3374c97fff98ed253dc9',
+      per_page = 4,
+      page = 1
 const url = `https://api.unsplash.com/photos/?per_page=${per_page}&page=${page}&client_id=${client_id}`;
 
 
 
 export default class App extends Component {
-  state = {
+  
+  constructor(props){
+    super(props)
+
+  this.state = {
     title: "MY GALLERY",
     data: [],
-    screen: null
+    modalVisible: false
+
+  }
+    this.setModalVisible = this.setModalVisible.bind(this)
   }
   componentDidMount = async() => {
     try {
@@ -28,31 +38,42 @@ export default class App extends Component {
       throw e
     }
   }
+  setModalVisible(){
+    this.setState({
+    modalVisible: !this.state.modalVisible
+    })
+  }
   
-  
-  render(){
-   
 
+
+
+  render(){
+    
 
     const newImages = this.state.data.map(i => ({
       id: i.id,
-      url: i.urls.small,
-      description: i.description,
-      isFavorite: false,
-      name:i.categories
-  }));
+      url: i.urls.small
+    }));
+    
   
-  let content = (<Photos images={newImages} states={this.state.screen}/>)
-  if (this.state.screen !== null){
-    content = <Zoom_photo/>
-  }
+    let content = (<Photos  images={newImages} visibleModal = {this.setModalVisible}/>)
+  
   
     return (
       <View>
+        <Modal 
+          style = {styles.modal}
+          transparent={false} 
+          visible={this.state.modalVisible}
+          onRequestClose = {()=>{}}
+        ><View>
+            <Text onPress = {()=>{this.setModalVisible(false)}}>Close</Text>
+            
+          </View>
+          
+        </Modal>
         <Header style={styles.header}  title={this.state.title}/>
         <View>{content}</View>
-        
-    
       </View>
     );
   }
@@ -69,5 +90,8 @@ const styles = StyleSheet.create({
   },
   header:{
     fontFamily:'roboto'
+  },
+  modal:{
+    backgroundColor: '#eee'
   }
 });
